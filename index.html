@@ -4,19 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aveksana: The Thesis Success Platform</title>
-    <!-- Chosen Palette: Aveksana Brand Guide (Dark Teal: #003B3E, Medium Teal: #01949A, Seafoam: #49C3A3, Greys: #7A7A7A, #FAFAFA) -->
-    <!-- Application Structure Plan: The SPA uses a sticky top-navigation bar to scroll to dedicated, thematic sections: "Challenge," "Solution," "Features," "Trust," "Impact," and "Pilot." This structure is not linear like the deck but is user-driven, allowing a prospect to explore content based on their priority (e.g., jump straight to "Trust & Integration"). The core interaction is the "Features" section, which uses JavaScript-powered tabs to let the user toggle between "Student Portal" and "Supervisor Portal," reinforcing the dual-portal concept and organizing a large amount of information compactly. -->
-    <!-- Visualization & Content Choices:
-        - Shared Challenge: Goal: Inform/Empathize. Method: 3-column HTML/Tailwind cards for scannability.
-        - Unified Ecosystem: Goal: Organize. Method: Simple HTML/Tailwind "diagram" using Unicode arrows (⇄) to visually connect the two portals.
-        - Features: Goal: Inform/Organize. Method: Interactive JS tabs. Interaction: onClick events toggle visibility of feature lists. Justification: Far more engaging and less overwhelming than two long, static text blocks.
-        - Trust & Integration: Goal: Build Trust. Method: 2-column grid with checklists (✓) for security and integration points. Justification: Directly addresses key sales objections in a clear, scannable format.
-        - Verifiable Impact (ROI): Goal: Inform/Compare. Method: Chart.js Horizontal Bar Chart. Interaction: Hover tooltips. Justification: Visually demonstrates the key metrics (30%, 75%, 60%) for maximum impact, which is much stronger than text alone.
-        - Pilot (CTA): Goal: Call to Action. Method: Simple text block and a prominent button.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=MuseoModerno:wght@700&display=swap" rel="stylesheet">
@@ -26,54 +14,45 @@
             background-color: #FAFAFA;
             color: #003B3E;
         }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 48rem; /* max-w-xl */
-            margin-left: auto;
-            margin-right: auto;
-            height: 20rem; /* h-80 */
-            max-height: 20rem; /* max-h-80 */
-        }
-        @media (min-width: 640px) {
-            .chart-container {
-                height: 24rem; /* sm:h-96 */
-                max-height: 24rem; /* sm:max-h-96 */
-            }
-        }
-        
-        /* Navigation Styles */
         .nav-link {
-            @apply px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-teal-100 hover:text-teal-800 transition-colors duration-200;
+            @apply px-3 py-2 rounded-md text-sm font-semibold text-gray-600 hover:bg-teal-50 hover:text-teal-800 transition-colors duration-200 tracking-wide;
         }
         .nav-link.active {
             @apply bg-teal-600 text-white hover:bg-teal-700 hover:text-white;
         }
-
-        /* Tab Styles */
-        .tab-btn {
-            @apply px-6 py-3 font-semibold text-lg rounded-t-lg transition-colors duration-300 border-b-4 border-transparent;
-        }
-        .tab-btn.active-tab {
-            @apply border-blue-600 text-blue-600;
-        }
-        .tab-btn:not(.active-tab) {
-            @apply text-gray-500 hover:text-gray-800;
-        }
-
-        /* Colors */
         .bg-brand-deep-blue { background-color: #003B3E; }
         .bg-brand-light-gray { background-color: #FAFAFA; }
         .text-brand-bright-blue { color: #01949A; }
         .text-brand-deep-blue { color: #003B3E; }
         .border-brand-bright-blue { border-color: #01949A; }
         .bg-brand-accent { background-color: #49C3A3; }
-
-        /* Typography */
         .font-heading {
             font-family: 'MuseoModerno', sans-serif;
             font-weight: 700;
         }
+        /* ROI Slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #E5E7EB;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #49C3A3;
+            cursor: pointer;
+            border: 3px solid #003B3E;
+        }
+        /* Status dots */
+        .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+        .dot-green { background: #49C3A3; }
+        .dot-amber { background: #F59E0B; }
+        .dot-red  { background: #EF4444; }
     </style>
 </head>
 <body class="antialiased">
@@ -82,56 +61,82 @@
     <header class="bg-white/95 backdrop-blur-sm shadow-md sticky top-0 z-50">
         <nav class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
+                <!-- Logo (left) -->
                 <div class="flex-shrink-0">
                     <span class="text-2xl font-bold text-brand-deep-blue font-heading">Aveksana</span>
                 </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#challenge" class="nav-link active">The Challenge</a>
-                        <a href="#solution" class="nav-link">Our Solution</a>
-                        <a href="#features" class="nav-link">Features</a>
-                        <a href="#trust" class="nav-link">Trust & Integration</a>
-                        <a href="#impact" class="nav-link">The Impact</a>
-                        <a href="https://calendar.app.google/XU6pe9SEdw3groEf7" target="_blank" rel="noopener noreferrer" class="px-5 py-2 rounded-lg text-base font-bold text-white bg-teal-600 hover:bg-teal-700 shadow-md hover:shadow-lg transition-all transform hover:scale-105 duration-300">Start a Pilot</a>
-                    </div>
+                <!-- Links (centre) -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#challenge" class="nav-link active">Challenge</a>
+                    <a href="#solution" class="nav-link">Solution</a>
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="#trust" class="nav-link">Trust</a>
+                    <a href="#evidence" class="nav-link">Evidence</a>
+                    <a href="#impact" class="nav-link">Impact</a>
                 </div>
-                <div class="md:hidden">
-                    <!-- Mobile Menu Button (optional, simple wrap for now) -->
+                <!-- CTA (right) + Hamburger -->
+                <div class="flex items-center gap-3">
+                    <a href="#contact" class="hidden md:inline-block px-5 py-2 rounded-lg text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 shadow-md hover:shadow-lg transition-all transform hover:scale-105 duration-300">Request a Demo</a>
+                    <button id="hamburger" class="md:hidden p-2 rounded-md text-gray-700 hover:bg-teal-100" aria-label="Open menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
                 </div>
-            <div class="md:hidden py-2 flex flex-wrap justify-center items-center">
+            </div>
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden pb-3 flex flex-col space-y-1">
                 <a href="#challenge" class="nav-link active">Challenge</a>
                 <a href="#solution" class="nav-link">Solution</a>
                 <a href="#features" class="nav-link">Features</a>
                 <a href="#trust" class="nav-link">Trust</a>
+                <a href="#evidence" class="nav-link">Evidence</a>
                 <a href="#impact" class="nav-link">Impact</a>
-                <a href="https://calendar.app.google/XU6pe9SEdw3groEf7" target="_blank" rel="noopener noreferrer" class="m-1 px-5 py-2 rounded-lg text-base font-bold text-white bg-teal-600 hover:bg-teal-700 shadow-md hover:shadow-lg transition-all transform hover:scale-105 duration-300">Start a Pilot</a>
+                <a href="#contact" class="mt-2 px-5 py-2 rounded-lg text-base font-bold text-white bg-teal-600 hover:bg-teal-700 text-center">Request a Demo</a>
             </div>
         </nav>
     </header>
 
-    <!-- Main Content -->
     <main>
 
         <!-- Section 1: The Shared Challenge -->
         <section id="challenge" class="py-20 bg-brand-light-gray">
             <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                 <h2 class="text-4xl font-bold text-center text-brand-deep-blue mb-6 font-heading">The Thesis Journey: A Shared Challenge</h2>
-                <p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-12">
+                <p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-4">
                     As educators, administrators, and supervisors, we all share a common goal: to see our students succeed.
-                    Yet, the thesis process is often a point of friction. It's not a failure of a single person, but a <strong class="font-semibold text-brand-deep-blue">process challenge</strong>.
+                    Yet, the thesis process is often a point of friction — at every level.
                 </p>
+                <p class="text-base text-center text-gray-500 max-w-2xl mx-auto mb-12">
+                    Whether it's an undergraduate dissertation, a Master's thesis, or a doctoral project, the same structural breakdown occurs: students lose momentum, supervisors lose time, and institutions lose students.
+                </p>
+
+                <!-- Anchor Statistic -->
+                <!-- UPDATE: Verify this figure against the latest data for your target market.
+                     Suggested sources: OECD Education at a Glance, Statistics Finland, HESA (UK), Eurostudent. -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6 mb-14 bg-white rounded-xl shadow-md p-8 max-w-3xl mx-auto border-l-8 border-teal-500">
+                    <div class="text-center sm:text-left sm:pr-8 sm:border-r sm:border-gray-200 flex-shrink-0">
+                        <p class="text-7xl font-heading text-brand-bright-blue leading-none">34%</p>
+                        <p class="text-sm text-gray-400 mt-1">EUA Council for Doctoral Education, 2019</p>
+                    </div>
+                    <p class="text-xl text-brand-deep-blue font-semibold text-center sm:text-left">
+                        of doctoral candidates who enrolled in 2009 had not completed within six years — and fewer than half of those who did finish met the target timeframe of 3–4 years.
+                    </p>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-teal-500">
                         <h3 class="text-2xl font-semibold text-brand-deep-blue mb-3 font-heading">For Students</h3>
                         <p class="text-gray-700 text-lg">Talented students feel lost and unmotivated, struggling to navigate a complex and often isolating process.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-seafoam-500" style="--tw-border-opacity: 1; border-color: rgb(73 195 163 / var(--tw-border-opacity));">
+                    <div class="bg-white p-6 rounded-lg shadow-lg border-l-4" style="border-color: #49C3A3;">
                         <h3 class="text-2xl font-semibold text-brand-deep-blue mb-3 font-heading">For Supervisors</h3>
                         <p class="text-gray-700 text-lg">Supervisors are overwhelmed with administrative tasks, leaving less time for high-impact academic mentorship.</p>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-gray-400">
                         <h3 class="text-2xl font-semibold text-brand-deep-blue mb-3 font-heading">For Universities</h3>
-                        <p class="text-gray-700 text-lg">Institutions face the high financial and reputational cost of non-completion, straining resources.</p>
+                        <p class="text-gray-700 text-lg">Each non-completing thesis student — undergraduate, Master's, or doctoral — represents an estimated <strong class="text-brand-deep-blue">€10,000–€15,000</strong> in unrecovered tuition, sunk institutional overhead, and recruitment costs. The reputational cost to rankings is additional.</p>
+                        <!-- Note: €10,000–€15,000 is an institutional estimate. The lower bound reflects annual public training cost per student (Eurydice); the upper bound reflects combined tuition + overhead in fee-paying programmes. Replace with your institution's audited figure if available. -->
                     </div>
                 </div>
             </div>
@@ -142,30 +147,35 @@
             <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                 <h2 class="text-4xl font-bold text-center text-brand-deep-blue mb-6 font-heading">Our Solution: A Unified Thesis Ecosystem</h2>
                 <p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-12">
-                    Aveksana bridges the gap between students and supervisors in one intelligent, supportive platform. 
+                    Aveksana bridges the gap between students and supervisors in one intelligent, supportive platform.
                     It's not just a management tool. It's a <strong class="font-semibold text-brand-deep-blue">pedagogical partner</strong> designed to guide, support, and connect.
                 </p>
-                <div class="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-10">
+
+                <div class="flex flex-col md:flex-row items-stretch justify-center gap-6 md:gap-10 mb-10">
                     <div class="text-center p-8 bg-white rounded-lg shadow-xl border-t-4 border-teal-500 w-full md:w-2/5">
                         <span class="text-5xl" role="img" aria-label="Student">🎓</span>
                         <h3 class="text-3xl font-bold text-brand-deep-blue mt-4 mb-2 font-heading">Student Portal</h3>
-                        <p class="text-lg text-gray-700">An AI-powered partner that guides them from the first idea to the final submission.</p>
+                        <p class="text-lg text-gray-700">A structured digital workspace combining milestone tracking, research gap analysis, and writing scaffolds — governed by your institution's academic integrity policy.</p>
                     </div>
 
-                    <div class="text-6xl font-bold text-teal-500 transform md:rotate-0">
-                        ⇄
-                    </div>
+                    <div class="flex items-center justify-center text-6xl font-bold text-teal-500">⇄</div>
 
                     <div class="text-center p-8 bg-white rounded-lg shadow-xl border-t-4 border-teal-700 w-full md:w-2/5">
                         <span class="text-5xl" role="img" aria-label="Supervisor">👩‍🏫</span>
                         <h3 class="text-3xl font-bold text-brand-deep-blue mt-4 mb-2 font-heading">Supervisor Portal</h3>
-                        <p class="text-lg text-gray-700">A command center that transforms admin burdens into opportunities for high-impact mentorship.</p>
+                        <p class="text-lg text-gray-700">A command centre that surfaces student progress, flags risk early, and automates routine administration — so your time goes to the mentorship that matters.</p>
                     </div>
+                </div>
+
+                <!-- AI Boundary Callout -->
+                <div class="max-w-3xl mx-auto bg-white border-l-4 rounded-r-lg shadow-md p-6" style="border-color: #49C3A3;">
+                    <p class="text-base font-semibold text-brand-deep-blue mb-1">A clear boundary on AI assistance</p>
+                    <p class="text-gray-700">Aveksana's AI surfaces structure, flags logical gaps, and checks citation completeness. <strong class="text-brand-deep-blue">It does not write for the student.</strong> Academic judgement — on quality, merit, and originality — remains entirely with your supervisors.</p>
                 </div>
             </div>
         </section>
-        
-        <!-- Section 3: Features (Interactive) -->
+
+        <!-- Section 3: Features -->
         <section id="features" class="py-20 bg-brand-light-gray">
             <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                 <h2 class="text-4xl font-bold text-center text-brand-deep-blue mb-6 font-heading">A Platform Built for Both Sides of the Desk</h2>
@@ -173,77 +183,114 @@
                     Explore the dedicated tools designed to foster clarity, motivation, and efficiency for everyone involved in the thesis process.
                 </p>
 
-                <!-- Tab Buttons -->
-                <!-- DELETED: <div class="flex justify-center border-b border-gray-300 mb-8"> ... </div> -->
-
-                <!-- Tab Content -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Student Content -->
-                    <div id="content-students" class="">
-                        <div class="bg-white p-6 rounded-lg shadow-lg h-full">
-                            <h3 class="text-2xl font-bold text-teal-600 mb-4 font-heading">Student Portal: Clarity & Motivation</h3>
-                            <p class="text-gray-700 mb-6 text-lg">Grounded in proven pedagogy like <strong class="font-semibold text-brand-deep-blue">formative assessment</strong> and <strong class="font-semibold text-brand-deep-blue">self-directed learning</strong> to provide a clear path forward.</p>
-                            <ul class="space-y-4">
-                                <li class="flex items-start">
-                                    <span class="text-teal-500 font-bold text-xl mr-3">✓</span>
-                                    <p class="text-lg"><strong class="text-gray-900">AI-Powered Ideation:</strong> Find valid, unexplored research topics and refine your arguments.</p>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-teal-500 font-bold text-xl mr-3">✓</span>
-                                    <p class="text-lg"><strong class="text-gray-900">Pedagogical Scaffolding:</strong> A structured workflow that guides students from start to finish, building skills and fostering independence.</p>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-teal-500 font-bold text-xl mr-3">✓</span>
-                                    <p class="text-lg"><strong class="text-gray-900">Formative Feedback Tools:</strong> Make feedback loops efficient and foster self-directed learning.</p>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-teal-500 font-bold text-xl mr-3">✓</span>
-                                    <p class="text-lg"><strong class="text-gray-900">Seamless Collaboration:</strong> One-click draft submission and in-platform communication.</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- Supervisor Content -->
-                    <div id="content-supervisors" class="">
-                        <div class="bg-white p-6 rounded-lg shadow-lg h-full">
-                            <h3 class="text-2xl font-bold text-teal-700 mb-4 font-heading">Supervisor Portal: From Admin to Mentorship</h3>
-                            <p class="text-gray-700 mb-6 text-lg">We give supervisors their most valuable resource back: <strong class="font-semibold text-brand-deep-blue">time</strong>.</p>
-                            <ul class="space-y-4">
-                                <li class="flex items-start">
-                                    <span class="text-teal-700 font-bold text-xl mr-3">✓</span>
-                                    <p class="text-lg"><strong class="text-gray-900">Holistic Dashboard:</strong> Track all student progress at a glance to see who is on track and who is stuck.</p>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-teal-700 font-bold text-xl mr-3">✓</span>
-                                    <p class="text-lg"><strong class="text-gray-900">Proactive Intervention Alerts:</strong> Get notified about stalled or inactive students before they fall behind.</p>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-teal-700 font-bold text-xl mr-3">✓</span>
-                                    <p class="text-lg"><strong class="text-gray-900">Automated Quality Checks:</strong> Use AI to check logic, structure, and plagiarism, saving you time for high-level feedback.</p>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-teal-700 font-bold text-xl mr-3">✓</span>
-                                    <p class="text-lg"><strong class="text-gray-900">Reduced Admin Load:</strong> Automated reminders and streamlined workflows cut down on repetitive emails.</p>
-                                </li>
-                            </ul>
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <!-- Student Portal -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <img src="./images/student-portal.png" alt="Aveksana Student Portal — Lifecycle Roadmap and Topic Framing workspace" class="w-full rounded-lg mb-6 border border-gray-100 shadow-sm">
+                        <h3 class="text-2xl font-bold text-teal-600 mb-4 font-heading">Student Portal: Clarity & Motivation</h3>
+                        <p class="text-gray-700 mb-6 text-lg">Grounded in proven pedagogy — <strong class="font-semibold text-brand-deep-blue">formative assessment</strong> and <strong class="font-semibold text-brand-deep-blue">self-directed learning</strong> — to provide a clear path forward.</p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <span class="text-teal-500 font-bold text-xl mr-3 flex-shrink-0">✓</span>
+                                <p class="text-lg"><strong class="text-gray-900">Research Gap Analysis:</strong> Surfaces unexplored angles within the student's declared topic area. The student chooses the direction.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-teal-500 font-bold text-xl mr-3 flex-shrink-0">✓</span>
+                                <p class="text-lg"><strong class="text-gray-900">Pedagogical Scaffolding:</strong> A structured workflow that builds skills and fosters independence from first idea to final submission.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-teal-500 font-bold text-xl mr-3 flex-shrink-0">✓</span>
+                                <p class="text-lg"><strong class="text-gray-900">Formative Feedback Tools:</strong> Efficient feedback loops that sustain self-directed progress between supervisor meetings.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-teal-500 font-bold text-xl mr-3 flex-shrink-0">✓</span>
+                                <p class="text-lg"><strong class="text-gray-900">One-Click Draft Submission:</strong> Seamless handoff to supervisor with full version history and in-platform communication.</p>
+                            </li>
+                        </ul>
                     </div>
 
-                    <!-- NEW Features Card -->
-                    <div class="md:col-span-2 bg-brand-accent p-8 rounded-lg shadow-lg border-l-4 border-brand-deep-blue">
-                        <h3 class="text-3xl font-bold text-brand-deep-blue mb-4 font-heading">Upcoming Features: Beyond Tracking... Supporting Well-being</h3>
-                        <p class="text-lg text-gray-800 mb-6">We track more than just progress; we track motivation. This provides a crucial early-warning system for a human-centric approach.</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <h4 class="text-xl font-semibold text-gray-900 font-heading">Student Well-being Check-in</h4>
-                                <p class="text-gray-800 text-lg">Simple, regular check-ins allow students to flag when they're feeling overwhelmed, unmotivated, or lost.</p>
-                            </div>
-                            <div>
-                                <h4 class="text-xl font-semibold text-gray-900 font-heading">Proactive Motivational Alerts</h4>
-                                <p class="text-gray-800 text-lg">Supervisors see at a glance, "3 students reported low motivation," allowing them to intervene with support, not just a deadline.</p>
-                            </div>
-                        </div>
+                    <!-- Supervisor Portal -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <img src="./images/supervisor-dashboard.png" alt="Aveksana Faculty Dashboard — Cohort Overview with risk and engagement indicators" class="w-full rounded-lg mb-6 border border-gray-100 shadow-sm">
+                        <h3 class="text-2xl font-bold text-teal-700 mb-4 font-heading">Supervisor Portal: From Admin to Mentorship</h3>
+                        <p class="text-gray-700 mb-6 text-lg">We give supervisors their most valuable resource back: <strong class="font-semibold text-brand-deep-blue">time</strong>.</p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <span class="text-teal-700 font-bold text-xl mr-3 flex-shrink-0">✓</span>
+                                <p class="text-lg"><strong class="text-gray-900">Holistic Dashboard:</strong> Track all student progress at a glance — who is on track and who needs attention.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-teal-700 font-bold text-xl mr-3 flex-shrink-0">✓</span>
+                                <p class="text-lg"><strong class="text-gray-900">Proactive Intervention Alerts:</strong> Get notified about stalled or inactive students before they fall behind.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-teal-700 font-bold text-xl mr-3 flex-shrink-0">✓</span>
+                                <p class="text-lg"><strong class="text-gray-900">Pre-submission Structural Review:</strong> Before a draft reaches you, the platform checks section completeness, citation format, and argument flow. You receive a structured report, not a raw document.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-teal-700 font-bold text-xl mr-3 flex-shrink-0">✓</span>
+                                <p class="text-lg"><strong class="text-gray-900">Reduced Admin Load:</strong> Automated reminders and streamlined workflows cut repetitive email overhead.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Supervisor Dashboard Table Mockup -->
+                <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                    <h3 class="text-xl font-bold text-brand-deep-blue mb-1 font-heading">Supervisor Dashboard — Live View</h3>
+                    <p class="text-gray-400 text-sm italic mb-6">Illustrative mockup. Student names are anonymised for demonstration.</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr class="border-b-2 border-gray-200">
+                                    <th class="pb-3 pr-4 text-gray-500 font-semibold uppercase text-xs tracking-wider">Student</th>
+                                    <th class="pb-3 pr-4 text-gray-500 font-semibold uppercase text-xs tracking-wider">Last Activity</th>
+                                    <th class="pb-3 pr-4 text-gray-500 font-semibold uppercase text-xs tracking-wider">Milestone</th>
+                                    <th class="pb-3 pr-4 text-gray-500 font-semibold uppercase text-xs tracking-wider">Risk</th>
+                                    <th class="pb-3 pr-4 text-gray-500 font-semibold uppercase text-xs tracking-wider">Status</th>
+                                    <th class="pb-3 pr-4 text-gray-500 font-semibold uppercase text-xs tracking-wider">RQ</th>
+                                    <th class="pb-3 text-gray-500 font-semibold uppercase text-xs tracking-wider">Eng.</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr>
+                                    <td class="py-4 pr-4">
+                                        <p class="font-semibold text-brand-deep-blue">Student A</p>
+                                        <p class="text-xs text-gray-400">M.Sc. Engineering</p>
+                                    </td>
+                                    <td class="py-4 pr-4 text-gray-500">3 days ago</td>
+                                    <td class="py-4 pr-4"><span class="px-2 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-700">Lit Review</span></td>
+                                    <td class="py-4 pr-4"><span class="px-2 py-1 rounded text-xs font-bold bg-green-100 text-green-700">LOW</span></td>
+                                    <td class="py-4 pr-4"><span class="dot dot-green"></span></td>
+                                    <td class="py-4 pr-4 font-semibold text-brand-deep-blue">82</td>
+                                    <td class="py-4 text-teal-500">▮▮▮</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 pr-4">
+                                        <p class="font-semibold text-brand-deep-blue">Student B</p>
+                                        <p class="text-xs text-gray-400">M.Sc. Physics</p>
+                                    </td>
+                                    <td class="py-4 pr-4 text-gray-500">Just now</td>
+                                    <td class="py-4 pr-4"><span class="px-2 py-1 rounded text-xs font-semibold bg-red-50 text-red-700">Defense Prep</span></td>
+                                    <td class="py-4 pr-4"><span class="px-2 py-1 rounded text-xs font-bold bg-red-100 text-red-700">HIGH</span></td>
+                                    <td class="py-4 pr-4"><span class="dot dot-amber"></span></td>
+                                    <td class="py-4 pr-4 font-semibold text-brand-deep-blue">88</td>
+                                    <td class="py-4 text-teal-500">▮▮▯</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 pr-4">
+                                        <p class="font-semibold text-brand-deep-blue">Student C</p>
+                                        <p class="text-xs text-gray-400">Ph.D. Education</p>
+                                    </td>
+                                    <td class="py-4 pr-4 text-gray-500">12 days ago</td>
+                                    <td class="py-4 pr-4"><span class="px-2 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-700">Write Proposal</span></td>
+                                    <td class="py-4 pr-4"><span class="px-2 py-1 rounded text-xs font-bold bg-amber-100 text-amber-700">MED</span></td>
+                                    <td class="py-4 pr-4"><span class="dot dot-amber"></span></td>
+                                    <td class="py-4 pr-4 font-semibold text-brand-deep-blue">74</td>
+                                    <td class="py-4 text-gray-300">▮▯▯</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -254,59 +301,245 @@
             <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                 <h2 class="text-4xl font-bold text-center text-brand-deep-blue mb-6 font-heading">Built for Trust. Designed for Integration.</h2>
                 <p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-12">
-                    We know security and integration are not optional. We've built our platform to be a secure, seamless part of your existing university ecosystem.
+                    Security and integration are not optional. We've built Aveksana to be a secure, seamless part of your existing university ecosystem.
                 </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-white p-8 rounded-lg shadow-lg border-t-4 border-seafoam-500" style="--tw-border-opacity: 1; border-color: rgb(73 195 163 / var(--tw-border-opacity));">
-                        <h3 class="text-3xl font-bold text-teal-600 mb-6 font-heading">Security & Compliance</h3>
-                        <p class="text-gray-700 mb-6 text-lg">We are built to be trusted by "information security Guardians."</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Security -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg border-t-4" style="border-color: #49C3A3;">
+                        <h3 class="text-2xl font-bold text-teal-600 mb-6 font-heading">Security & Compliance</h3>
                         <ul class="space-y-3">
-                            <li class="flex items-center text-lg"><span class="text-teal-500 text-2xl mr-3">✓</span> GDPR Compliant by Design</li>
-                            <li class="flex items-center text-lg"><span class="text-teal-500 text-2xl mr-3">✓</span> Secure EU Data Hosting</li>
-                            <li class="flex items-center text-lg"><span class="text-teal-500 text-2xl mr-3">✓</span> Data Encrypted at Rest & In Transit</li>
-                            <li class="flex items-center text-lg"><span class="text-teal-500 text-2xl mr-3">✓</span> Robust, Role-Based Access Control</li>
+                            <li class="flex items-start text-lg"><span class="text-teal-500 text-2xl mr-3 flex-shrink-0">✓</span> GDPR Compliant by Design</li>
+                            <li class="flex items-start text-lg"><span class="text-teal-500 text-2xl mr-3 flex-shrink-0">✓</span> Hosted on AWS EU infrastructure</li>
+                            <li class="flex items-start text-lg"><span class="text-teal-500 text-2xl mr-3 flex-shrink-0">✓</span> Data Encrypted at Rest &amp; In Transit</li>
+                            <li class="flex items-start text-lg"><span class="text-teal-500 text-2xl mr-3 flex-shrink-0">✓</span> Role-Based Access Control</li>
+                            <li class="flex items-start text-lg"><span class="text-teal-500 text-2xl mr-3 flex-shrink-0">✓</span> Annual penetration test report on request</li>
+                        </ul>
+                        <a href="#contact" class="mt-6 inline-block text-teal-600 font-semibold underline text-sm">Download Security Whitepaper →</a>
+                    </div>
+
+                    <!-- Integration -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg border-t-4 border-gray-400">
+                        <h3 class="text-2xl font-bold text-gray-600 mb-6 font-heading">Seamless Integration</h3>
+                        <p class="text-gray-700 mb-4 text-base">Aveksana integrates with the platforms your institution already uses:</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full border border-gray-300 text-sm font-semibold text-brand-deep-blue bg-gray-50">Moodle</span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full border border-gray-300 text-sm font-semibold text-brand-deep-blue bg-gray-50">Canvas</span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full border border-gray-300 text-sm font-semibold text-brand-deep-blue bg-gray-50">Blackboard</span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full border border-gray-300 text-sm font-semibold text-brand-deep-blue bg-gray-50">SITS / Tribal</span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full border border-gray-300 text-sm font-semibold text-gray-400 bg-gray-50">+ your LMS via API</span>
+                        </div>
+                        <ul class="space-y-3">
+                            <li class="flex items-start text-lg"><span class="text-gray-500 text-2xl mr-3 flex-shrink-0">✓</span> Single Sign-On (SSO)</li>
+                            <li class="flex items-start text-lg"><span class="text-gray-500 text-2xl mr-3 flex-shrink-0">✓</span> Streamline, Don't Replace</li>
+                            <li class="flex items-start text-lg"><span class="text-gray-500 text-2xl mr-3 flex-shrink-0">✓</span> Dedicated IT onboarding support</li>
                         </ul>
                     </div>
-                    <div class="bg-white p-8 rounded-lg shadow-lg border-t-4 border-gray-500">
-                        <h3 class="text-3xl font-bold text-gray-600 mb-6 font-heading">A Seamless Part of Your Ecosystem</h3>
-                        <p class="text-gray-700 mb-6 text-lg">Aveksana is not another data silo. It's a bridge that connects your systems.</p>
+
+                    <!-- Data Governance -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg border-t-4 border-brand-deep-blue">
+                        <h3 class="text-2xl font-bold text-brand-deep-blue mb-6 font-heading">Data Governance</h3>
                         <ul class="space-y-3">
-                            <li class="flex items-center text-lg"><span class="text-gray-500 text-2xl mr-3">✓</span> Full API Integration (LMS, SIS, etc.)</li>
-                            <li class="flex items-center text-lg"><span class="text-gray-500 text-2xl mr-3">✓</span> Single Sign-On (SSO) Enabled</li>
-                            <li class="flex items-center text-lg"><span class="text-gray-500 text-2xl mr-3">✓</span> Streamline, Don't Replace</li>
-                            <li class="flex items-center text-lg"><span class="text-gray-500 text-2xl mr-3">✓</span> Enhances Your Current Infrastructure</li>
+                            <li class="flex items-start text-lg"><span class="text-brand-deep-blue text-2xl mr-3 flex-shrink-0">✓</span> Your institution owns all data</li>
+                            <li class="flex items-start text-lg"><span class="text-brand-deep-blue text-2xl mr-3 flex-shrink-0">✓</span> No data used to train AI models</li>
+                            <li class="flex items-start text-lg"><span class="text-brand-deep-blue text-2xl mr-3 flex-shrink-0">✓</span> Right to erasure (GDPR Art. 17)</li>
+                            <li class="flex items-start text-lg"><span class="text-brand-deep-blue text-2xl mr-3 flex-shrink-0">✓</span> Data Processing Agreement (DPA) provided before pilot</li>
+                            <li class="flex items-start text-lg"><span class="text-brand-deep-blue text-2xl mr-3 flex-shrink-0">✓</span> No third-party data sharing</li>
                         </ul>
+                        <a href="#contact" class="mt-6 inline-block text-brand-deep-blue font-semibold underline text-sm">Request our DPA →</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Section 5: The Impact (ROI) -->
+        <!-- Section 5: Evidence (NEW) -->
+        <section id="evidence" class="py-20 bg-brand-light-gray">
+            <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-bold text-center text-brand-deep-blue mb-6 font-heading">Who Is Already On Board</h2>
+                <p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-12">
+                    We build with institutions, not for them. Here is where we stand.
+                </p>
+
+                <!-- Partner Badges -->
+                <div class="flex flex-wrap justify-center gap-6 mb-14">
+                    <div class="bg-white rounded-xl shadow-md px-8 py-6 text-center border-t-4 border-teal-500" style="min-width: 220px;">
+                        <p class="text-xl font-bold text-brand-deep-blue font-heading">TAMK Games Academy</p>
+                        <p class="text-teal-600 font-semibold mt-1">Pilot Completed — Feb–Apr 2025</p>
+                        <p class="text-xs text-gray-400 mt-1">School of Industrial Engineering</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md px-8 py-6 text-center border-t-4" style="border-color: #01949A; min-width: 220px;">
+                        <p class="text-xl font-bold text-brand-deep-blue font-heading">University of Helsinki</p>
+                        <p class="font-semibold mt-1" style="color: #01949A;">Launching April 2026</p>
+                        <p class="text-xs text-gray-400 mt-1">Confirmed Pilot Partner</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md px-8 py-6 text-center border-t-4 border-gray-300" style="min-width: 220px;">
+                        <p class="text-xl font-bold text-brand-deep-blue font-heading">4 Institutions</p>
+                        <p class="text-gray-600 font-semibold mt-1">In Active Partnership Discussions</p>
+                        <p class="text-xs text-gray-400 mt-1">Pipeline Partners</p>
+                    </div>
+                </div>
+
+                <div class="max-w-3xl mx-auto mb-14">
+                    <blockquote class="bg-white rounded-xl shadow-md p-8 border-t-4 border-teal-500">
+                        <p class="text-5xl font-heading text-brand-bright-blue leading-none mb-4">"</p>
+                        <p class="text-xl text-brand-deep-blue italic leading-relaxed">Many of our students said after the presentation that this is the tool they can see helping them with their thesis work a lot. My hope is that the system can be used all over our unit — and considered as a service across all programmes at TAMK.</p>
+                        <footer class="mt-6 flex items-center justify-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center text-white font-bold font-heading flex-shrink-0">TP</div>
+                            <div>
+                                <p class="font-semibold text-brand-deep-blue">Toni Pippola</p>
+                                <cite class="text-sm text-gray-400 not-italic">TAMK Games Academy, School of Industrial Engineering</cite>
+                            </div>
+                        </footer>
+                    </blockquote>
+                </div>
+
+                <!-- Academic Grounding -->
+                <div class="bg-white rounded-xl shadow-md p-8">
+                    <h3 class="text-xl font-bold text-brand-deep-blue mb-2 font-heading">The Pedagogy Behind the Platform</h3>
+                    <p class="text-gray-600 mb-6 text-base">Aveksana's design is grounded in established educational research, not product intuition.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="border-l-4 border-teal-500 pl-4">
+                            <p class="font-semibold text-brand-deep-blue mb-1">Formative Assessment</p>
+                            <p class="text-sm text-gray-500">Black, P. &amp; Wiliam, D. (1998). Assessment and classroom learning. <em>Assessment in Education</em>, 5(1), 7–74.</p>
+                        </div>
+                        <div class="border-l-4 pl-4" style="border-color: #49C3A3;">
+                            <p class="font-semibold text-brand-deep-blue mb-1">Self-Regulated Learning</p>
+                            <p class="text-sm text-gray-500">Zimmerman, B.J. (2002). Becoming a self-regulated learner: An overview. <em>Theory into Practice</em>, 41(2), 64–70.</p>
+                        </div>
+                        <div class="border-l-4 border-gray-400 pl-4">
+                            <p class="font-semibold text-brand-deep-blue mb-1">Thesis Non-Completion</p>
+                            <p class="text-sm text-gray-500">Lovitts, B.E. (2001). <em>Leaving the Ivory Tower: The Causes and Consequences of Departure from Doctoral Study.</em> Rowman &amp; Littlefield.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: ROI Calculator -->
         <section id="impact" class="py-20 bg-brand-deep-blue text-white">
             <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                <h2 class="text-4xl font-bold text-center mb-6 font-heading">From Input to Verifiable Impact</h2>
+                <h2 class="text-4xl font-bold text-center mb-6 font-heading">What Non-Completion Actually Costs Your Institution</h2>
                 <p class="text-lg text-center text-gray-200 max-w-3xl mx-auto mb-12">
-                    Aveksana delivers quantifiable results that matter to students, faculty, and your bottom line. Here is what our pilot programs have shown.
+                    Move the slider to your enrolled thesis student count — undergraduate, Master's, and doctoral combined. The calculator estimates your current annual cost of non-completion and the potential saving with Aveksana.
                 </p>
-                <div class="bg-white rounded-lg shadow-2xl p-6 md:p-8">
-                    <div class="chart-container">
-                        <canvas id="impactChart"></canvas>
+
+                <div class="bg-white rounded-xl shadow-2xl p-6 md:p-10 max-w-4xl mx-auto">
+                    <!-- Slider -->
+                    <div class="mb-10">
+                        <div class="flex justify-between items-center mb-3">
+                            <label class="text-brand-deep-blue font-semibold text-lg" for="studentSlider">Thesis students enrolled (all levels)</label>
+                            <span id="studentCount" class="text-3xl font-heading font-bold text-brand-bright-blue">500</span>
+                        </div>
+                        <input type="range" id="studentSlider" min="100" max="3000" step="50" value="500">
+                        <div class="flex justify-between text-xs text-gray-400 mt-1">
+                            <span>100</span><span>3,000</span>
+                        </div>
                     </div>
+
+                    <!-- Output Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-gray-50 rounded-lg p-6 text-center border border-gray-200">
+                            <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-3">Students at Risk of Non-Completion</p>
+                            <p id="studentsAtRisk" class="text-4xl font-heading font-bold text-brand-deep-blue">100</p>
+                            <p class="text-xs text-gray-400 mt-2">at sector average 20% rate</p>
+                        </div>
+                        <div class="bg-red-50 rounded-lg p-6 text-center border border-red-200">
+                            <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-3">Estimated Annual Cost of Non-Completion</p>
+                            <p id="totalCost" class="text-4xl font-heading font-bold text-red-600">€1,500,000</p>
+                            <p class="text-xs text-gray-400 mt-2">at est. €15,000 per non-completing student</p>
+                        </div>
+                        <div class="rounded-lg p-6 text-center border-2" style="background-color: #f0faf7; border-color: #49C3A3;">
+                            <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-3">Potential Annual Saving with Aveksana</p>
+                            <p id="potentialSaving" class="text-4xl font-heading font-bold" style="color: #01949A;">€225,000</p>
+                            <p class="text-xs text-gray-400 mt-2">conservative 15% improvement in completion rate</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 text-center leading-relaxed">
+                        Assumptions: 20% blended non-completion rate across all thesis levels (doctoral rate: 34%, EUA Council for Doctoral Education, 2019; undergraduate and Master's rates vary by institution); €15,000 cost per non-completing student (institutional estimate based on unrecovered tuition and overhead — replace with your audited figure); 15% conservative improvement based on projected programme impact. This calculator is indicative, not a contractual projection.
+                    </p>
                 </div>
             </div>
         </section>
 
-        <!-- Section 6: Pilot / CTA -->
-        <section id="pilot" class="py-24 text-center">
-            <div class="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-                <h2 class="text-4xl font-bold text-brand-deep-blue mb-6 font-heading">Let's Build This Together</h2>
-                <p class="text-lg text-gray-700 mb-10">
-                    We believe in a collaborative approach. We invite you to join a <strong class="font-semibold text-brand-deep-blue">no-risk pilot program</strong>
-                    to prove the value for your specific faculty, integrating with your systems and measuring the impact from day one.
+        <!-- Section 7: Institutional Partnership CTA -->
+        <section id="pilot" class="py-24">
+            <div class="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-bold text-center text-brand-deep-blue mb-6 font-heading">Institutional Partnership Programme</h2>
+                <p class="text-lg text-center text-gray-700 mb-14 max-w-2xl mx-auto">
+                    We take a structured, low-risk approach to every new institutional partnership. Here is what the process looks like.
                 </p>
-                <a href="https://calendar.app.google/XU6pe9SEdw3groEf7" target="_blank" rel="noopener noreferrer" class="inline-block bg-teal-600 text-white font-bold text-lg px-10 py-4 rounded-lg shadow-lg hover:bg-teal-700 transition-transform transform hover:scale-105 duration-300">
-                    Start a Pilot
-                </a>
+
+                <!-- Three Steps -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-14">
+                    <div class="text-center">
+                        <div class="w-12 h-12 rounded-full bg-teal-600 text-white text-xl font-bold font-heading flex items-center justify-center mx-auto mb-4">1</div>
+                        <h3 class="text-xl font-bold text-brand-deep-blue mb-2 font-heading">Discovery Session</h3>
+                        <p class="text-gray-600">A 45-minute conversation with your academic leadership team to understand your faculty's specific challenges across all thesis levels.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 rounded-full text-white text-xl font-bold font-heading flex items-center justify-center mx-auto mb-4" style="background-color: #01949A;">2</div>
+                        <h3 class="text-xl font-bold text-brand-deep-blue mb-2 font-heading">Tailored Assessment</h3>
+                        <p class="text-gray-600">We provide a written integration and impact assessment specific to your LMS, your student cohort, and your institutional goals. No generic decks.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 rounded-full text-white text-xl font-bold font-heading flex items-center justify-center mx-auto mb-4" style="background-color: #49C3A3;">3</div>
+                        <h3 class="text-xl font-bold text-brand-deep-blue mb-2 font-heading">12-Week Pilot</h3>
+                        <p class="text-gray-600">A structured pilot with dedicated onboarding support, a mid-point review, and a full impact report at close. No cost at pilot stage.</p>
+                    </div>
+                </div>
+
+                <div class="text-center mb-16">
+                    <a href="https://calendar.app.google/XU6pe9SEdw3groEf7" target="_blank" rel="noopener noreferrer" class="inline-block bg-teal-600 text-white font-bold text-lg px-10 py-4 rounded-lg shadow-lg hover:bg-teal-700 transition-transform transform hover:scale-105 duration-300">
+                        Book a Discovery Session
+                    </a>
+                </div>
+
+                <!-- FAQ Accordion -->
+                <div class="max-w-2xl mx-auto">
+                    <h3 class="text-2xl font-bold text-brand-deep-blue mb-6 font-heading text-center">Questions institutions ask before joining</h3>
+                    <div class="space-y-3">
+
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                            <button class="faq-btn w-full text-left px-6 py-5 flex justify-between items-center text-brand-deep-blue font-semibold text-lg hover:bg-gray-50 transition-colors">
+                                Who owns the data?
+                                <span class="faq-icon text-2xl font-bold text-teal-500 ml-4 flex-shrink-0">+</span>
+                            </button>
+                            <div class="faq-answer hidden px-6 pb-5 text-gray-700 text-base">
+                                Your institution owns all data, always. Aveksana acts as a data processor under your institution's data controller authority. Your data is never used to train AI models or shared with third parties. A Data Processing Agreement (DPA) is provided as standard before any pilot begins.
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                            <button class="faq-btn w-full text-left px-6 py-5 flex justify-between items-center text-brand-deep-blue font-semibold text-lg hover:bg-gray-50 transition-colors">
+                                What does the pilot cost?
+                                <span class="faq-icon text-2xl font-bold text-teal-500 ml-4 flex-shrink-0">+</span>
+                            </button>
+                            <div class="faq-answer hidden px-6 pb-5 text-gray-700 text-base">
+                                The 12-week institutional pilot is provided at no cost. Our model is partnership-first: we prove the value using your real cohort data before any commercial conversation takes place. Post-pilot pricing is agreed transparently, based on enrolled student count.
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                            <button class="faq-btn w-full text-left px-6 py-5 flex justify-between items-center text-brand-deep-blue font-semibold text-lg hover:bg-gray-50 transition-colors">
+                                How long does IT integration take?
+                                <span class="faq-icon text-2xl font-bold text-teal-500 ml-4 flex-shrink-0">+</span>
+                            </button>
+                            <div class="faq-answer hidden px-6 pb-5 text-gray-700 text-base">
+                                For SSO and basic LMS read-access, typically 2–3 working days with your IT team. Full integration — assignment sync, grade passback, SIS connection — takes 2–4 weeks depending on your LMS configuration. We provide dedicated technical support throughout and do not require your IT team to carry the process alone.
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                            <button class="faq-btn w-full text-left px-6 py-5 flex justify-between items-center text-brand-deep-blue font-semibold text-lg hover:bg-gray-50 transition-colors">
+                                Who decides the quality of research and proposals?
+                                <span class="faq-icon text-2xl font-bold text-teal-500 ml-4 flex-shrink-0">+</span>
+                            </button>
+                            <div class="faq-answer hidden px-6 pb-5 text-gray-700 text-base">
+                                Your supervisors do, always. Aveksana surfaces structural completeness, citation gaps, and argument flow — it flags these for the supervisor's consideration. The platform makes no automated grade, pass, or fail decision. Academic judgement on quality, merit, and originality remains entirely with your faculty.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -316,22 +549,29 @@
     <footer id="contact" class="bg-brand-deep-blue text-gray-300 py-12">
         <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
             <p class="text-2xl font-semibold text-white mb-2 font-heading">Aveksana: Research That Matters</p>
-            <p class="text-lg">Surya Yadav | +358 46 937 5029 | surya.yadav@aveksana.com</p>
+            <p class="text-lg mb-3">Surya Yadav | +358 46 937 5029 | surya.yadav@aveksana.com</p>
+            <p class="text-sm text-gray-400 mb-4">Aveksana Oy | Business ID: 3375817-6 | Tampere, Finland</p>
+            <div class="flex justify-center flex-wrap gap-6 text-sm text-gray-400">
+                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                <a href="#" class="hover:text-white transition-colors">Data Processing Agreement</a>
+            </div>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
+            // --- Mobile Nav Toggle ---
+            const hamburger = document.getElementById('hamburger');
+            const mobileMenu = document.getElementById('mobile-menu');
+            hamburger.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
             // --- Navigation Active State on Scroll ---
             const sections = document.querySelectorAll('section');
             const navLinks = document.querySelectorAll('.nav-link');
-            
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.5 
-            };
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -345,142 +585,68 @@
                         });
                     }
                 });
-            }, observerOptions);
+            }, { root: null, rootMargin: '0px', threshold: 0.4 });
 
-            sections.forEach(section => {
-                observer.observe(section);
-            });
+            sections.forEach(section => observer.observe(section));
 
             // --- Smooth Scrolling for Nav Links ---
             navLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const targetId = link.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    mobileMenu.classList.add('hidden');
+                    const targetEl = document.querySelector(link.getAttribute('href'));
+                    if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            // --- ROI Calculator ---
+            const slider = document.getElementById('studentSlider');
+            const studentCountEl  = document.getElementById('studentCount');
+            const studentsAtRiskEl = document.getElementById('studentsAtRisk');
+            const totalCostEl     = document.getElementById('totalCost');
+            const potentialSavingEl = document.getElementById('potentialSaving');
+
+            const NON_COMPLETION_RATE = 0.20;
+            const COST_PER_STUDENT    = 15000;
+            const IMPROVEMENT_RATE    = 0.15;
+
+            function fmt(n) {
+                return '€' + n.toLocaleString('en-EU');
+            }
+
+            function updateCalculator() {
+                const students = parseInt(slider.value);
+                const atRisk   = Math.round(students * NON_COMPLETION_RATE);
+                const cost     = atRisk * COST_PER_STUDENT;
+                const saving   = Math.round(atRisk * IMPROVEMENT_RATE * COST_PER_STUDENT);
+
+                studentCountEl.textContent   = students.toLocaleString();
+                studentsAtRiskEl.textContent = atRisk.toLocaleString();
+                totalCostEl.textContent      = fmt(cost);
+                potentialSavingEl.textContent = fmt(saving);
+            }
+
+            slider.addEventListener('input', updateCalculator);
+            updateCalculator();
+
+            // --- FAQ Accordion ---
+            document.querySelectorAll('.faq-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const answer = btn.nextElementSibling;
+                    const icon   = btn.querySelector('.faq-icon');
+                    const isOpen = !answer.classList.contains('hidden');
+
+                    document.querySelectorAll('.faq-answer').forEach(a => a.classList.add('hidden'));
+                    document.querySelectorAll('.faq-icon').forEach(i => i.textContent = '+');
+
+                    if (!isOpen) {
+                        answer.classList.remove('hidden');
+                        icon.textContent = '−';
                     }
                 });
             });
 
-            // --- Feature Tab Logic ---
-            // DELETED: const btnStudents = document.getElementById('btn-students');
-            // DELETED: const btnSupervisors = document.getElementById('btn-supervisors');
-            // DELETED: const contentStudents = document.getElementById('content-students');
-            // DELETED: const contentSupervisors = document.getElementById('content-supervisors');
-            // DELETED: if (btnStudents) { ... }
-            // DELETED: if (btnSupervisors) { ... }
-
-            // --- Impact Chart.js ---
-            const impactCtx = document.getElementById('impactChart');
-            if (impactCtx) {
-                const impactChart = new Chart(impactCtx.getContext('2d'), {
-                    type: 'bar',
-                    data: {
-                        labels: [
-                            'Increase in On-Time Completion', 
-                            'Reduction in Supervisor Admin Load', 
-                            'Improvement in First-Submission Quality'
-                        ],
-                        datasets: [{
-                            label: 'Impact Percentage',
-                            data: [30, 75, 60],
-                            backgroundColor: [
-                                '#01949A',
-                                '#016367',
-                                '#49C3A3'
-                            ],
-                            borderRadius: 4,
-                            barThickness: 40
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        indexAxis: 'y',
-                        scales: {
-                            x: {
-                                beginAtZero: true,
-                                max: 100,
-                                grid: {
-                                    color: '#E8E8E8'
-                                },
-                                ticks: {
-                                    font: {
-                                        size: 14,
-                                        weight: '700',
-                                        family: 'DM Sans'
-                                    },
-                                    color: '#003B3E',
-                                    callback: function(value) {
-                                        return value + '%'
-                                    }
-                                }
-                            },
-                            y: {
-                                grid: {
-                                    display: false
-                                },
-                                ticks: {
-                                    font: {
-                                        size: 14,
-                                        weight: '700',
-                                        family: 'DM Sans'
-                                    },
-                                    color: '#003B3E'
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            title: {
-                                display: true,
-                                text: 'Quantifiable Program Impact',
-                                font: {
-                                    size: 24,
-                                    weight: '700',
-                                    family: 'MuseoModerno'
-                                },
-                                color: '#003B3E',
-                                padding: {
-                                    bottom: 20
-                                }
-                            },
-                            tooltip: {
-                                enabled: true,
-                                backgroundColor: '#003B3E',
-                                titleFont: {
-                                    size: 16,
-                                    weight: 'bold',
-                                    family: 'DM Sans'
-                                },
-                                bodyFont: {
-                                    size: 14,
-                                    family: 'DM Sans'
-                                },
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed.x !== null) {
-                                            label += context.parsed.x + '%';
-                                        }
-                                        return label;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
         });
     </script>
 </body>
 </html>
-
-
-
